@@ -122,7 +122,7 @@ class Ioc {
     foreach($parameters as $index => $parameter) {
       $values[] = null;
       
-      if(!empty($parameter->getClass())) {
+      if($parameter->getClass()) {
         foreach($arguments as $argIndex => $argument) {
           if(is_object($argument)) {
             if($parameter->getClass()->isInstance($argument)) {
