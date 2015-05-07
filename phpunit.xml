@@ -5,5 +5,8 @@
     <whitelist addUncoveredFilesFromWhitelist="true">
       <directory suffix=".php">src</directory>
     </whitelist>
+    <exclude>
+      <directory suffix=".php">vendor</directory>
+    </exclude>
   </filter>
 </phpunit>
