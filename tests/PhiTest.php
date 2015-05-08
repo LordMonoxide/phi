@@ -118,4 +118,16 @@ class PhiTest extends PHPUnit_Framework_TestCase {
     $this->assertInstanceOf('B', $instance->getB2());
     $this->assertEquals(spl_object_hash($instance->getB1()), spl_object_hash($instance->getB2()));
   }
+  
+  public function testKeyedInjection() {
+    $instance = Phi::instance()->make('MixedConstructor', ['val2' => 'test1', 'test2']);
+    $this->assertEquals('test1', $instance->getVal2());
+    $this->assertEquals('test2', $instance->getVal1());
+  }
+  
+  public function testMultipleKeyedInjection() {
+    $instance = Phi::instance()->make('ScalarConstructor', ['val2' => 'test1', 'val1' => 'test2']);
+    $this->assertEquals('test1', $instance->getVal2());
+    $this->assertEquals('test2', $instance->getVal1());
+  }
 }
