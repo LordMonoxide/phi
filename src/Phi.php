@@ -84,25 +84,42 @@ class Phi {
     $parameters = $constructor->getParameters();
     $values = [];
     
+    // Size array
+    for($i = 0; $i < count($parameters); $i++) {
+      $values[] = null;
+    }
+    
     /*
-     * The following is a two-step process to fill out the parameters. For example:
+     * The following is a three-step process to fill out the parameters. For example:
      * 
      * ```
-     * parameters = [A, B, string, B, string]
-     * arguments  = [new B, new B, 'asdf', 'fdsa']
-     * values     = []
+     * parameters = [A $p1, B $p2, string $p3, B $p4, string $p5]
+     * arguments  = [new B, new B, 'p5' => 'asdf', 'fdsa']
+     * values     = [, , , , ]
+     * 
+     * Iterate over arguments ->
+     *   Does argument have key? ->
+     *     Iterate over parameters ->
+     *       Is argument key == parameter name? ->
+     *         values[parameter index] = argument
+     *         unset argument[argument key]
+     *         break
+     * 
+     * parameters = [A $p1, B $p2, string $p3, B $p4, string $p5]
+     * arguments  = [new B, new B, 'fdsa']
+     * values     = [, , , , 'asdf']
      * 
      * Iterate over parameters ->
      *   Does parameter have a class? ->
      *     Iterate over arguments ->
      *       Is argument instance of parameter? ->
      *         values[parameter index] = argument
-     *         unset argument[parameter index]
+     *         unset argument[argument index]
      *         break
      * 
-     * parameters = [A, B, string, B, string]
-     * arguments  = ['asdf', 'fdsa']
-     * values     = [, new B, , new B, ]
+     * parameters = [A $p1, B $p2, string $p3 B $p4, string $p5]
+     * arguments  = ['fdsa']
+     * values     = [, new B, , new B, 'asdf']
      * 
      * Iterate over parameters ->
      *   Is values missing index [parameter index]?
@@ -114,19 +131,30 @@ class Phi {
      * 
      * parameters = [A, B, string, B, string]
      * arguments  = []
-     * values     = [new A (from Ioc), new B, 'asdf', new B, 'fdsa']
+     * values     = [new A (from Ioc), new B, 'fdsa', new B, 'asdf']
      * ```
      */
     
     // Step 1...
-    foreach($parameters as $index => $parameter) {
-      $values[] = null;
-      
+    foreach($arguments as $argIndex => $argument) {
+      if(is_string($argIndex)) {
+        foreach($parameters as $paramIndex => $parameter) {
+          if($argIndex == $parameter->getName()) {
+            $values[$paramIndex] = $argument;
+            unset($arguments[$argIndex]);
+            break;
+          }
+        }
+      }
+    }
+    
+    // Step 2...
+    foreach($parameters as $paramIndex => $parameter) {
       if($parameter->getClass()) {
         foreach($arguments as $argIndex => $argument) {
           if(is_object($argument)) {
             if($parameter->getClass()->isInstance($argument)) {
-              $values[$index] = $argument;
+              $values[$paramIndex] = $argument;
               unset($arguments[$argIndex]);
               break;
             }
@@ -135,13 +163,13 @@ class Phi {
       }
     }
     
-    // Step 2...
-    foreach($parameters as $index => $parameter) {
-      if(!isset($values[$index])) {
+    // Step 3...
+    foreach($parameters as $paramIndex => $parameter) {
+      if(!isset($values[$paramIndex])) {
         if($parameter->getClass()) {
-          $values[$index] = $this->make($parameter->getClass()->getName());
+          $values[$paramIndex] = $this->make($parameter->getClass()->getName());
         } else {
-          $values[$index] = array_shift($arguments);
+          $values[$paramIndex] = array_shift($arguments);
         }
       }
     }
