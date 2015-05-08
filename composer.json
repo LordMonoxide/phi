@@ -1,9 +1,9 @@
 {
-    "name": "lordmonoxide/php-ioc",
+    "name": "lordmonoxide/phi",
     "version": "1.0.1",
     "description": "A super-minimal inversion-of-control library",
     "license": "GPLv3",
-    "homepage": "http://github.com/LordMonoxide/php-ioc",
+    "homepage": "http://github.com/LordMonoxide/phi",
     "keywords": ["IOC", "Inversion of control", "DI", "Dependency injection"],
     "minimum-stability": "dev",
     "authors": [
@@ -20,7 +20,7 @@
     },
     "autoload": {
     	"psr-4": {
-            "LordMonoxide\\Ioc\\": "src/"
+            "LordMonoxide\\Phi\\": "src/"
         }
     }
 }
