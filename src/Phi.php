@@ -1,4 +1,4 @@
-<?php namespace LordMonoxide\Ioc;
+<?php namespace LordMonoxide\Phi;
 
 use InvalidArgumentException;
 use ReflectionClass;
@@ -6,7 +6,7 @@ use ReflectionClass;
 /**
  * Dependency injection manager
  */
-class Ioc {
+class Phi {
   /**
    * @var object  Singleton instance
    */
