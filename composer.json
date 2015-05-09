@@ -1,6 +1,5 @@
 {
     "name": "lordmonoxide/phi",
-    "version": "1.0.0",
     "description": "A super-minimal inversion-of-control library",
     "license": "GPLv3",
     "homepage": "http://github.com/LordMonoxide/phi",
