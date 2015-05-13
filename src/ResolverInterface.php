@@ -1,5 +1,9 @@
 <?php namespace LordMonoxide\Phi;
 
+/**
+ * An interface for custom binding resolvers.  Resolvers
+ * may be used to extend the functionality of Phi.
+ */
 interface ResolverInterface {
   /**
    * Gets or creates an instance of an alias, or returns null to allow the next Resolver to execute
