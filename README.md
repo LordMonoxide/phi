@@ -40,7 +40,7 @@ class Foo {
   public $first_name = null;
   public $last_name  = null;
   
-  public function __construct(A $a, $first_name = null, $last_name = null, B $b) {
+  public function __construct(B $b, A $a, $first_name = null, $last_name = null) {
     $this->a = $a;
     $this->b = $b;
     $this->first_name = $first_name;
@@ -116,7 +116,7 @@ In some cases, it is useful to be explicit about which parameters you are passin
 
 ```php
 class Foo {
-  public function __constructor(A $a, $first_name = null, $last_name = null, B $b) {
+  public function __construct(A $a, B $b, $first_name = null, $last_name = null) {
     // ...
   }
 }
@@ -257,3 +257,34 @@ $log = $phi->make('core.log');
 ```
 
 You may also bind aliases to callables or singletons.
+
+### Custom Resolvers
+There may be times when you want to match far more than a single alias. Custom resolvers were designed with
+this purpose in mind. When a binding is requested from Phi, any custom resolvers that are registered will be
+executed one by one in the order they were added, and the first one to return a non-null value is the one that
+will be used. If all custom resolvers return null, Phi will resolve the binding normally.
+
+```php
+use LordMonoxide\Phi\ResolverInterface;
+
+class CustomResolver implements ResolverInterface {
+  public function make($alias, array $arguments = []) {
+    if($alias == 'A') {
+      return new B(new A());
+    }
+  }
+}
+
+$phi->addResolver(new CustomResolver());
+```
+
+```php
+$b = $phi->make('A');
+//$b == new B
+```
+
+Another reason to use custom resolvers is to wrap other IoC containers. For example:
+
+```php
+Example here
+```
