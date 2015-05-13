@@ -5,6 +5,19 @@
 # φhi
 An efficient, easy-to-use, open-source PHP dependency injection container, boasting a tiny footprint, powerful features, 100% unit test coverage, and awesome documentation.  Phi is compatible with PSR-0 and PSR-4 auto-loading standards, and open to collaboration from anyone who feels they can make an improvement.
 
+## Installation
+
+### Composer
+[Composer](https://getcomposer.org/) is the recommended method of installation for Phi.
+
+```
+composer require lordmonoxide/phi
+```
+
+### GitHub
+
+Phi may be downloaded from [GitHub](https://github.com/LordMonoxide/phi/).
+
 ## Features
 Phi supports several different ways to inject dependencies, which can all be used alone or in conjunction with one another.
 
@@ -283,8 +296,21 @@ $b = $phi->make('A');
 //$b == new B
 ```
 
-Another reason to use custom resolvers is to wrap other IoC containers. For example:
+Another reason to use custom resolvers is to wrap other IoC containers. For example, if you are using Laravel, you could combine the Laravel container with Phi:
 
 ```php
-Example here
+use Illuminate\Support\Facades\App;
+use LordMonoxide\Phi\ResolverInterface;
+
+class LaravelResolver implements ResolverInterface {
+  public function make($alias, array $arguments = []) {
+    if(App::bound($alias)) {
+      return App::make($alias, $arguments);
+    }
+  }
+}
+
+$phi->addResolver(new LaravelResolver());
 ```
+
+This way, any binding that is registered in the Laravel IoC container will be resolved by it.  The rest will be passed on to Phi.
