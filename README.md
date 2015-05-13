@@ -11,7 +11,7 @@ An efficient, easy-to-use, open-source PHP dependency injection container, boast
 [Composer](https://getcomposer.org/) is the recommended method of installation for Phi.
 
 ```
-composer require lordmonoxide/phi
+$ composer require lordmonoxide/phi
 ```
 
 ### GitHub
@@ -122,7 +122,7 @@ $foo = $phi->make('Foo', [$bar, $baz]);
 // $foo->b   == new B
 ```
 
-Parameters of the same type will be passed to the constructor in the order they are given to Phi.  If you would like to pass them in a different order, please see the section on named injection.
+Parameters of the same type will be passed to the constructor in the order they are given to Phi.  If you would like to pass them in a different order, please see the section on [named injection](https://github.com/LordMonoxide/phi#named-injection).
 
 ### Named Injection
 In some cases, it is useful to be explicit about which parameters you are passing in.  Phi makes this easy.  Consider the class from the "Passing Parameters" section:
