@@ -6,7 +6,7 @@ use ReflectionClass;
 /**
  * Dependency injection manager
  */
-class Phi {
+class Phi implements ResolverInterface {
   /**
    * @var object  Singleton instance
    */
@@ -40,6 +40,15 @@ class Phi {
   }
   
   /**
+   * Adds a custom resolver to the IoC container
+   * 
+   * @param   ResolverInterface $resolver The resolver to add
+   */
+  public function addResolver(ResolverInterface $resolver) {
+    $this->_resolvers[] = $resolver;
+  }
+  
+  /**
    * Gets or creates an instance of an alias
    * 
    * @param   string  $alias      An alias (eg. `db.helper`), or a real class or interface name
@@ -48,6 +57,17 @@ class Phi {
    * @returns object  A new instance of `$alias`'s binding, or a shared instance in the case of singletons
    */
   public function make($alias, array $arguments = []) {
+    // Iterate over each resolver and see if they have a binding override
+    foreach($this->_resolvers as $resolver) {
+      // Ask the resolver for the alias' binding
+      $binding = $resolver->make($alias, $arguments);
+      
+      // If it's not null, we got a binding
+      if($binding !== null) {
+        return $binding;
+      }
+    }
+    
     // Check to see if we have something bound to this alias
     if(array_key_exists($alias, $this->_map)) {
       $binding = $this->_map[$alias];
@@ -182,6 +202,11 @@ class Phi {
    * @var array   An assotiative array of aliases and bindings
    */
   private $_map = [];
+  
+  /**
+   * @var array   An array of custom resolvers
+   */
+  private $_resolvers = [];
   
   /**
    * Protected constructor; class cannot be instantiated.

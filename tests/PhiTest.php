@@ -8,6 +8,8 @@ require_once __DIR__ . '/stubs/NoConstructor.php';
 require_once __DIR__ . '/stubs/ScalarConstructor.php';
 require_once __DIR__ . '/stubs/TypedConstructor.php';
 require_once __DIR__ . '/stubs/Uninstantiable.php';
+require_once __DIR__ . '/stubs/CustomResolver.php';
+require_once __DIR__ . '/stubs/CustomResolver2.php';
 
 use LordMonoxide\Phi\Phi;
 
@@ -129,5 +131,31 @@ class PhiTest extends PHPUnit_Framework_TestCase {
     $instance = Phi::instance()->make('ScalarConstructor', ['val2' => 'test1', 'val1' => 'test2']);
     $this->assertEquals('test1', $instance->getVal2());
     $this->assertEquals('test2', $instance->getVal1());
+  }
+  
+  public function testCustomResolver() {
+    $phi = Phi::instance();
+    $phi->addResolver(new CustomResolver());
+    
+    $instance = $phi->make('A');
+    $this->assertInstanceOf('B', $instance);
+    
+    $instance = $phi->make('NoConstructor');
+    $this->assertInstanceOf('NoConstructor', $instance);
+  }
+  
+  public function testMultipleCustomResolver() {
+    $phi = Phi::instance();
+    $phi->addResolver(new CustomResolver());
+    $phi->addResolver(new CustomResolver2());
+    
+    $instance = $phi->make('A');
+    $this->assertInstanceOf('B', $instance);
+    
+    $instance = $phi->make('B');
+    $this->assertInstanceOf('A', $instance);
+    
+    $instance = $phi->make('NoConstructor');
+    $this->assertInstanceOf('NoConstructor', $instance);
   }
 }
