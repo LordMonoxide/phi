@@ -1,3 +1,5 @@
+# This package has been superceded by [BapCat/Phi](https://github.com/BapCat/Phi/).
+
 [![Build Status](https://travis-ci.org/LordMonoxide/phi.svg?branch=1.2.0)](https://travis-ci.org/LordMonoxide/phi)
 [![Coverage Status](https://coveralls.io/repos/LordMonoxide/phi/badge.svg?branch=1.2.0)](https://coveralls.io/r/LordMonoxide/phi?branch=1.2.0)
 [![License](https://img.shields.io/packagist/l/LordMonoxide/phi.svg)](https://img.shields.io/packagist/l/LordMonoxide/phi.svg)
